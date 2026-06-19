@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Imperio Life</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>👑 Imperio Life</h1>
+
+    <h2 id="progreso">0/5 tareas completadas</h2>
+
+    <div class="barra">
+        <div class="barra-interna" id="barra"></div>
+    </div>
+
+    <p id="porcentajeTexto">0%</p>
+
+    <h2>🔥 Hábitos</h2>
+
+    <div class="task">
+        <input type="checkbox">
+        Levantarme antes de las 9 AM
+    </div>
+
+    <div class="task">
+        <input type="checkbox">
+        Beber 3 litros de agua
+    </div>
+
+    <div class="task">
+        <input type="checkbox">
+        Gimnasio
+    </div>
+
+    <div class="task">
+        <input type="checkbox">
+        Sin refrescos
+    </div>
+
+    <div class="task">
+        <input type="checkbox">
+        Estudiar Derecho
+    </div>
+
+    <h2>🥤 Agua</h2>
+
+    <button onclick="sumarAgua()">
+        +1 vaso
+    </button>
+
+    <p id="agua">0 vasos</p>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+
+</html><h2 id="racha">
+🔥 Racha: 0 días
+</h2>
+
+<h2>⚖ Mi Peso</h2>
+
+<input
+type="number"
+id="peso"
+placeholder="Peso actual">
+
+<button onclick="guardarPeso()">
+Guardar peso
+</button>
+
+<p id="pesoActual"></p>
+
+<h2>🥤 Agua</h2>
+
+<button onclick="sumarAgua()">
++1 vaso
+</button>
+
+<p id="agua">0 vasos</p>
