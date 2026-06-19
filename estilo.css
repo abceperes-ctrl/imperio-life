@@ -1,0 +1,89 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:40px}
+.oculto{display:none!important}
+
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-box{background:#111;border:2px solid #ffd700;border-radius:20px;padding:40px 30px;width:100%;max-width:380px;box-shadow:0 0 40px rgba(255,215,0,0.2)}
+.login-box h1{color:#ffd700;text-align:center;margin-bottom:10px;font-size:32px}
+.login-box p{color:#888;text-align:center;margin-bottom:25px}
+.login-box input{width:100%;padding:15px;margin:10px 0;background:#0a0a0a;border:1px solid #333;border-radius:12px;color:#fff;font-size:16px;outline:none}
+.login-box input:focus{border-color:#ffd700}
+.login-box button{width:100%;padding:16px;margin-top:15px;background:linear-gradient(135deg,#ffd700,#ffb700);border:none;border-radius:12px;color:#000;font-weight:bold;font-size:17px;cursor:pointer}
+.error{color:#ff4444;text-align:center;margin-top:12px;font-size:14px}
+
+.app-screen{max-width:500px;margin:0 auto;padding:20px}
+.header{text-align:center;margin-bottom:25px;position:relative;padding-top:10px}
+.header h2{color:#ffd700;font-size:30px;margin-bottom:5px}
+.header p{color:#888;font-size:14px;text-transform:capitalize}
+.btn-salir{position:absolute;right:0;top:10px;padding:8px 14px;background:#222;border:1px solid #333;border-radius:8px;color:#fff;font-size:12px;cursor:pointer}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.stat-box{background:#111;border:1px solid #222;border-radius:15px;padding:18px;text-align:center}
+.stat-box h3{color:#ffd700;font-size:32px;margin-bottom:4px}
+.stat-box p{color:#777;font-size:13px}
+
+.progress-bar{height:10px;background:#111;border-radius:10px;overflow:hidden;margin-bottom:25px;border:1px solid #222}
+.progress-fill{height:100%;background:linear-gradient(90deg,#ffd700,#ffb700);width:0%;transition:width 0.4s ease}
+
+.versiculo-box{background:linear-gradient(135deg,#111,#1a1a1a);border:2px solid #ffd700;border-radius:18px;padding:22px;margin-bottom:18px;text-align:center}
+.versiculo-box h3{color:#ffd700;margin-bottom:12px;font-size:16px}
+.versiculo-box p{font-size:18px;font-style:italic;margin-bottom:8px;line-height:1.6}
+.versiculo-box span{color:#ffd700;font-weight:bold;font-size:13px}
+
+.frase-box{background:linear-gradient(135deg,#0a0a0a,#151515);border:2px solid #ffb700;border-radius:18px;padding:22px;margin-bottom:18px;position:relative;overflow:hidden}
+.frase-box::before{content:'⚡';position:absolute;right:-30px;top:-30px;font-size:120px;opacity:0.08;transform:rotate(20deg)}
+.frase-box h3{color:#ffb700;margin-bottom:15px;font-size:16px}
+.frase-contenido{background:#000;border-left:4px solid #ffd700;border-radius:12px;padding:18px;margin-bottom:15px}
+.frase-contenido p{color:#ffd700;font-size:19px;font-weight:bold;text-align:center;margin-bottom:8px;line-height:1.5}
+.frase-contenido span{color:#888;font-size:13px;text-align:right;display:block;font-style:italic}
+.check-frase{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:#0a0a0a;border:1px solid #333;border-radius:12px;cursor:pointer;transition:0.3s}
+.check-frase:hover{border-color:#ffd700;background:#151515}
+.check-frase input{width:20px;height:20px;accent-color:#ffd700;cursor:pointer}
+.check-frase span{font-weight:bold;font-size:14px}
+.check-frase.completada{border-color:#ffd700;background:rgba(255,215,0,0.1)}
+
+.section{background:#111;border:1px solid #222;border-radius:18px;padding:20px;margin-bottom:18px}
+.section h3{color:#ffd700;margin-bottom:15px;font-size:17px}
+
+.tarea{display:flex;align-items:center;padding:14px;background:#0a0a0a;border-radius:12px;margin-bottom:10px;cursor:pointer;transition:0.2s}
+.tarea:hover{background:#151515}
+.tarea.completada{opacity:0.5}
+.tarea.completada span{text-decoration:line-through}
+.tarea input{width:22px;height:22px;margin-right:12px;accent-color:#ffd700;cursor:pointer}
+.tarea span{font-size:15px;line-height:1.4}
+
+.section button{padding:12px 18px;background:linear-gradient(135deg,#ffd700,#ffb700);border:none;border-radius:10px;color:#000;font-weight:bold;margin-right:8px;margin-top:10px;cursor:pointer;font-size:15px}
+.section button.btn-sec{background:#222;color:#fff;border:1px solid #333}
+.section input{padding:12px;background:#0a0a0a;border:1px solid #333;border-radius:10px;color:#fff;margin-right:8px;width:120px}
+
+.meta-item{display:flex;align-items:center;padding:13px;background:#0a0a0a;border-radius:10px;margin-bottom:8px}
+.meta-item.completada{opacity:0.5}
+.meta-item.completada span{text-decoration:line-through}
+.meta-item input{width:20px;height:20px;margin-right:12px;accent-color:#ffd700}
+.meta-item span{flex:1;font-size:15px}
+.meta-item button{margin-left:auto;padding:6px 10px;background:#ff4444;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer}
+
+.add-meta{display:flex;gap:8px;margin-top:12px}
+.add-meta input{flex:1}
+
+.historial{border:2px solid #ffb700;background:linear-gradient(135deg,#111,#0a0a0a)}
+#calendarioHistorial{max-height:400px;overflow-y:auto;padding-right:5px}
+.dia-historial{background:#0a0a0a;border:1px solid #333;border-radius:12px;padding:12px;margin-bottom:8px;transition:0.2s}
+.dia-historial:hover{border-color:#ffd700}
+.dia-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.dia-fecha{font-weight:bold;color:#ffd700;font-size:14px}
+.dia-porcentaje{font-size:18px;font-weight:bold}
+.dia-barra{height:6px;background:#222;border-radius:3px;overflow:hidden}
+.dia-barra-fill{height:100%;background:linear-gradient(90deg,#ffd700,#ffb700);transition:width 0.3s}
+.dia-detalles{margin-top:8px;font-size:12px;color:#888}
+.dia-detalles span{margin-right:8px}
+.dia-detalles.ok{color:#4ade80}
+.dia-detalles.fail{color:#ff4444}
+
+.btn-reset{width:100%;padding:15px;background:#222;border:1px solid #333;border-radius:12px;color:#fff;font-weight:bold;margin-top:20px;cursor:pointer;font-size:16px}
+
+#calendarioHistorial::-webkit-scrollbar{width:5px}
+#calendarioHistorial::-webkit-scrollbar-track{background:#111}
+#calendarioHistorial::-webkit-scrollbar-thumb{background:#ffd700;border-radius:5px}
+
+@media(max-width:480px){.app-screen{padding:15px}.login-box{padding:30px 20px}}

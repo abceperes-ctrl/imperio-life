@@ -1,88 +1,101 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Imperio Life</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imperio Life</title>
+<link rel="stylesheet" href="estilo.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
 </head>
-
 <body>
+<div id="loginScreen" class="login-screen">
+<div class="login-box">
+<h1>🔥 IMPERIO LIFE</h1>
+<p>Construye tu imperio diario</p>
+<input type="email" id="emailInput" placeholder="Tu correo" autocomplete="email">
+<input type="password" id="passwordInput" placeholder="Contraseña" autocomplete="current-password">
+<button onclick="entrar()">ENTRAR</button>
+<p id="errorMsg" class="error"></p>
+</div>
+</div>
 
-<div class="container">
+<div id="appScreen" class="app-screen oculto">
+<div class="header">
+<h2>Imperio Life</h2>
+<p id="fecha"></p>
+<button class="btn-salir" onclick="salir()">Salir</button>
+</div>
 
-    <h1>👑 Imperio Life</h1>
+<div class="stats">
+<div class="stat-box">
+<h3 id="porcentaje">0%</h3>
+<p>Hoy</p>
+</div>
+<div class="stat-box">
+<h3 id="racha">0</h3>
+<p>Racha</p>
+</div>
+</div>
 
-    <h2 id="progreso">0/5 tareas completadas</h2>
+<div class="progress-bar">
+<div id="progressFill" class="progress-fill"></div>
+</div>
 
-    <div class="barra">
-        <div class="barra-interna" id="barra"></div>
-    </div>
+<div class="versiculo-box">
+<h3>📖 Palabra del Día</h3>
+<p id="versoTexto"></p>
+<span id="versoCita"></span>
+</div>
 
-    <p id="porcentajeTexto">0%</p>
+<div class="frase-box">
+<h3>⚡ Mentalidad de Imperio</h3>
+<div class="frase-contenido">
+<p id="fraseTexto"></p>
+<span id="fraseAutor"></span>
+</div>
+<label class="check-frase">
+<input type="checkbox" id="checkFrase" onchange="marcarFrase()">
+<span>Lo leí y lo creo</span>
+</label>
+</div>
 
-    <h2>🔥 Hábitos</h2>
+<div class="section">
+<h3>🎯 Hábitos Diarios</h3>
+<div id="listaTareas"></div>
+</div>
 
-    <div class="task">
-        <input type="checkbox">
-        Levantarme antes de las 9 AM
-    </div>
+<div class="section">
+<h3>💧 Agua</h3>
+<p><span id="vasos">0</span>/8 vasos</p>
+<button onclick="sumarAgua()">+1 Vaso</button>
+<button class="btn-sec" onclick="resetAgua()">Reset</button>
+</div>
 
-    <div class="task">
-        <input type="checkbox">
-        Beber 3 litros de agua
-    </div>
+<div class="section">
+<h3>⚖️ Peso</h3>
+<input type="number" id="inputPeso" placeholder="70.5" step="0.1">
+<button onclick="guardarPeso()">Guardar</button>
+<p>Último: <span id="ultimoPeso">--</span> kg</p>
+</div>
 
-    <div class="task">
-        <input type="checkbox">
-        Gimnasio
-    </div>
+<div class="section">
+<h3>🎯 Metas 2026</h3>
+<div id="listaMetas"></div>
+<div class="add-meta">
+<input type="text" id="inputMeta" placeholder="Nueva meta...">
+<button onclick="agregarMeta()">Agregar</button>
+</div>
+</div>
 
-    <div class="task">
-        <input type="checkbox">
-        Sin refrescos
-    </div>
+<div class="section historial">
+<h3>📅 Historial 30 Días</h3>
+<div id="calendarioHistorial"></div>
+</div>
 
-    <div class="task">
-        <input type="checkbox">
-        Estudiar Derecho
-    </div>
-
-    <h2>🥤 Agua</h2>
-
-    <button onclick="sumarAgua()">
-        +1 vaso
-    </button>
-
-    <p id="agua">0 vasos</p>
-
+<button class="btn-reset" onclick="resetDia()">Reset Día</button>
 </div>
 
 <script src="app.js"></script>
-
 </body>
-
-</html><h2 id="racha">
-🔥 Racha: 0 días
-</h2>
-
-<h2>⚖ Mi Peso</h2>
-
-<input
-type="number"
-id="peso"
-placeholder="Peso actual">
-
-<button onclick="guardarPeso()">
-Guardar peso
-</button>
-
-<p id="pesoActual"></p>
-
-<h2>🥤 Agua</h2>
-
-<button onclick="sumarAgua()">
-+1 vaso
-</button>
-
-<p id="agua">0 vasos</p>
+</html>
