@@ -1,411 +1,1029 @@
-const TAREAS=[
-'🌅 Levantarse 5:00 AM',
-'💪 Ejercicio 30min',
-'📚 Leer 10 páginas',
-'💰 Ahorrar $50',
-'🧘 Meditar 10min'
+/* =====================================
+IMPERIO BUSINESS OS V2
+PARTE 1
+===================================== */
+let coins = Number(localStorage.getItem("coins")) || 0;
+
+let achievements =
+JSON.parse(localStorage.getItem("achievements")) || [];
+
+const HABITS = [
+"🌅 Levantarme a las 9AM",
+"📵 1 hora sin redes",
+"💪 Ejercicio",
+"📚 Leer 10 páginas",
+"🧘 Meditar",
+"🙏 Orar",
+"📖 Leer Biblia",
+"💈 Dar seguimiento a clientes",
+"📞 Hacer llamadas pendientes",
+"💰 Revisar finanzas",
+"🥗 Comer saludable",
+"🚶 Caminar 30 min",
+"📝 Planificar el día",
+"🎯 Completar tarea importante"
 ];
 
-let datos={
-tareas:[false,false,false,false,false],
-vasos:0,
-peso:'',
-racha:0,
-ultimoDia:'',
-rachaSumada:false,
-xp:0
+const VERSES = [
+"Todo lo puedo en Cristo que me fortalece. Filipenses 4:13",
+"Esfuérzate y sé valiente. Josué 1:9",
+"El Señor es mi pastor; nada me faltará. Salmos 23:1",
+"Porque yo sé los planes que tengo para vosotros. Jeremías 29:11",
+"Dios es nuestro amparo y fortaleza. Salmos 46:1"
+];
+
+const MOTIVATIONS = [
+"🔥 La disciplina vence la motivación",
+"⚔️ Construye tu imperio un día a la vez",
+"👑 El éxito es una decisión diaria",
+"📈 Hoy debes ser mejor que ayer",
+"💰 Tu futuro depende de tus hábitos"
+];
+
+let data = JSON.parse(localStorage.getItem("imperioData")) || {
+pin:"1234",
+xp:0,
+habits:new Array(HABITS.length).fill(false)
 };
 
-let metas = JSON.parse(localStorage.getItem('imperioMetas')) || [];
-let xpHistorial={};
-let audioActivado=false;
+let todayTasks =
+JSON.parse(localStorage.getItem("todayTasks")) || [];
 
-const VERSOS=[
-{texto:"Todo lo puedo en Cristo que me fortalece",cita:"Filipenses 4:13"},
-{texto:"Porque yo sé los planes que tengo para ti",cita:"Jeremías 29:11"},
-{texto:"El Señor es mi pastor; nada me faltará",cita:"Salmos 23:1"},
-{texto:"Esfuérzate y sé valiente",cita:"Josué 1:9"},
-{texto:"Dios es nuestro amparo y fortaleza",cita:"Salmos 46:1"}
-];
+let tomorrowTasks =
+JSON.parse(localStorage.getItem("tomorrowTasks")) || [];
 
-const MENSAJES=[
-"Los reyes no se rinden 👑",
-"5AM es guerra contra la mediocridad ⚔️",
-"Cada hábito es un ladrillo 🏰",
-"Hoy compites contra tu yo de ayer 💪",
-"La disciplina vence al talento 🔥",
-"Un día más fuerte, un día más cerca 🚀"
-];
+let reminders =
+JSON.parse(localStorage.getItem("reminders")) || [];
 
-let intentos=0;
-const PIN_GUARDADO=localStorage.getItem('imperioPIN')||'1234';
+let followups =
+JSON.parse(localStorage.getItem("followups")) || [];
 
-function unlockApp(){
-const pin=document.getElementById('pin-input').value;
+let clients =
+JSON.parse(localStorage.getItem("clients")) || [];
 
-if(pin===PIN_GUARDADO){
-document.getElementById('lock-screen').style.display='none';
-document.getElementById('app').style.display='block';
+/* =====================================
+LOGIN
+===================================== */
+
+function login(){
+
+const pin =
+document.getElementById("pin-input").value;
+
+if(pin===data.pin){
+
+document.getElementById("lock-screen")
+.style.display="none";
+
+document.getElementById("app")
+.style.display="block";
+
 init();
+
 }else{
-intentos++;
-document.getElementById('pin-error').style.display='block';
-document.getElementById('pin-input').value='';
 
-if(intentos>=3){
-alert('3 intentos fallidos. Borrando datos.');
-localStorage.clear();
-location.reload();
-}
-}
+document.getElementById("error")
+.innerText="PIN incorrecto";
+
 }
 
-document.addEventListener('click',function(){
-if(!audioActivado){
-const ding=document.getElementById('dingSound');
-ding.play().then(()=>ding.pause()).catch(()=>{});
-audioActivado=true;
 }
-},{once:true});
+
+/* =====================================
+INIT
+===================================== */
 
 function init(){
-cargarDatos();
-mostrarFecha();
-crearVasos();
-cargarEstado();
-mostrarVersoDiario();
-mostrarMensajeMotivacion();
-mostrarMetas();
-actualizarXP();
-setInterval(checkDiaNuevo,60000);
+
+renderHabits();
+
+showVerse();
+
+showMotivation();
+
+updateXP();
+
+renderCommandCenter();
+
+renderTodayTasks();
+
+renderTomorrowTasks();
+
+renderReminders();
+
+renderFollowups();
+
+renderClients();
+renderCoins();
+renderAchievements();
+renderStats();
+renderMentor();
+loadPersonalNote();
+renderMission();
+renderMoney();
+setInterval(showMotivation,15000);
+
 }
 
-/* ===================== VERSO ===================== */
+/* =====================================
+SAVE
+===================================== */
 
-function mostrarVersoDiario(){
-const hoy=new Date();
-const diaDelAño=Math.floor((hoy-new Date(hoy.getFullYear(),0,0))/86400000);
-const verso=VERSOS[diaDelAño%VERSOS.length];
+function save(){
 
-document.getElementById('verso-text').textContent='"'+verso.texto+'"';
-document.getElementById('verso-cita').textContent=verso.cita;
+localStorage.setItem(
+"imperioData",
+JSON.stringify(data)
+);
+
+localStorage.setItem(
+"todayTasks",
+JSON.stringify(todayTasks)
+);
+
+localStorage.setItem(
+"tomorrowTasks",
+JSON.stringify(tomorrowTasks)
+);
+
+localStorage.setItem(
+"reminders",
+JSON.stringify(reminders)
+);
+
+localStorage.setItem(
+"followups",
+JSON.stringify(followups)
+);
+
+localStorage.setItem(
+"clients",
+JSON.stringify(clients)
+);
+
 }
 
-/* ===================== MOTIVACIÓN ===================== */
+/* =====================================
+VERSO Y MOTIVACION
+===================================== */
 
-function mostrarMensajeMotivacion(){
-const completadas=datos.tareas.filter(t=>t).length;
+function showVerse(){
 
-let mensaje;
-if(datos.racha>=7)mensaje="🔥 7 DÍAS DE RACHA.";
-else if(completadas===5)mensaje="👑 100% COMPLETADO.";
-else mensaje=MENSAJES[Math.floor(Math.random()*MENSAJES.length)];
+const verse =
+VERSES[Math.floor(
+Math.random()*VERSES.length
+)];
 
-document.getElementById('mensaje-motivation').textContent=mensaje;
+document.getElementById("verse")
+.innerText=verse;
+
 }
 
-/* ===================== STORAGE ===================== */
+function showMotivation(){
 
-function cargarDatos(){
-const d=localStorage.getItem('imperioDatos_v5');
-if(d)datos=JSON.parse(d);
+const motivation =
+MOTIVATIONS[Math.floor(
+Math.random()*MOTIVATIONS.length
+)];
 
-const x=localStorage.getItem('xpHistorial_v5');
-if(x)xpHistorial=JSON.parse(x);
+document.getElementById("motivation")
+.innerText=motivation;
+
 }
 
-function guardarDatos(){
-localStorage.setItem('imperioDatos_v5',JSON.stringify(datos));
-localStorage.setItem('xpHistorial_v5',JSON.stringify(xpHistorial));
-}
+/* =====================================
+HABITOS
+===================================== */
 
-/* ===================== UI ===================== */
+function renderHabits(){
 
-function mostrarFecha(){
-const f=new Date();
+const container =
+document.getElementById("habitList");
 
-document.getElementById('fecha').textContent=
-f.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'});
+container.innerHTML="";
 
-document.getElementById('racha').textContent=datos.racha;
-document.getElementById('peso').textContent=datos.peso?datos.peso+' kg':'-- kg';
-}
+HABITS.forEach((habit,index)=>{
 
-/* ===================== DÍA NUEVO ===================== */
+container.innerHTML += `
+<div onclick="toggleHabit(${index})">
+${habit}
+<span>
+${data.habits[index] ? "✅" : "❌"}
+</span>
+</div>
+`;
 
-function checkDiaNuevo(){
-const hoy=new Date().toDateString();
-
-if(datos.ultimoDia!==hoy && datos.ultimoDia!==''){
-
-const completadas=datos.tareas.filter(t=>t).length;
-
-if(!datos.rachaSumada && completadas>=3){
-datos.racha++;
-}else if(completadas<3){
-datos.racha=0;
-}
-
-datos.tareas=[false,false,false,false,false];
-datos.vasos=0;
-datos.rachaSumada=false;
-datos.ultimoDia=hoy;
-
-guardarDatos();
-mostrarFecha();
-cargarEstado();
-mostrarVersoDiario();
-mostrarMensajeMotivacion();
-actualizarXP();
-}
-}
-
-/* ===================== AGUA ===================== */
-
-function crearVasos(){
-const div=document.getElementById('vasosDiv');
-div.innerHTML='';
-
-for(let i=0;i<8;i++){
-const v=document.createElement('div');
-v.className='vaso'+(i<datos.vasos?' lleno':'');
-v.onclick=()=>toggleVaso(i);
-div.appendChild(v);
-}
-
-document.getElementById('vasos').textContent=datos.vasos;
-}
-
-function toggleVaso(i){
-datos.vasos=i+1;
-crearVasos();
-sonidoDing();
-actualizarXP();
-guardarDatos();
-}
-
-function sumarAgua(){
-if(datos.vasos<8){
-datos.vasos++;
-crearVasos();
-sonidoDing();
-actualizarXP();
-guardarDatos();
-}
-}
-
-/* ===================== SONIDO ===================== */
-
-function sonidoDing(){
-if(audioActivado){
-const ding=document.getElementById('dingSound');
-ding.currentTime=0;
-ding.play().catch(()=>{});
-}
-}
-
-/* ===================== HÁBITOS ===================== */
-
-function toggleTarea(i){
-datos.tareas[i]=!datos.tareas[i];
-
-document.getElementById('check'+i).classList.toggle('activo');
-document.querySelectorAll('.habito')[i].classList.toggle('completado');
-
-sonidoDing();
-actualizarXP();
-guardarDatos();
-verificarRacha();
-mostrarMensajeMotivacion();
-}
-
-/* ===================== Racha ===================== */
-
-function verificarRacha(){
-const completadas=datos.tareas.filter(t=>t).length;
-if(completadas>=3)datos.rachaSumada=true;
-}
-
-/* ===================== PESO ===================== */
-
-function guardarPeso(){
-const p=document.getElementById('pesoInput').value;
-
-if(p){
-datos.peso=p;
-document.getElementById('peso').textContent=p+' kg';
-localStorage.setItem('peso_'+new Date().toDateString(),p);
-
-sonidoDing();
-actualizarXP();
-guardarDatos();
-alert('Peso guardado ✅ +15 XP');
-}
-}
-
-/* ===================== XP ===================== */
-
-function actualizarXP(){
-const t=datos.tareas.filter(x=>x).length*10;
-const a=datos.vasos>=8?20:0;
-const p=datos.peso?15:0;
-
-const xpHoy=t+a+p;
-
-let xpTotal=0;
-for(let f in xpHistorial)xpTotal+=xpHistorial[f];
-
-xpTotal=xpTotal-(xpHistorial[new Date().toDateString()]||0)+xpHoy;
-
-datos.xp=xpTotal;
-xpHistorial[new Date().toDateString()]=xpHoy;
-
-guardarDatos();
-mostrarRango();
-mostrarCalendarioCalor();
-mostrarHistorial();
-}
-
-/* ===================== RANGO ===================== */
-
-function mostrarRango(){
-const rangos=[
-{xp:0,nombre:'Recluta',icon:'🪖'},
-{xp:100,nombre:'Soldado',icon:'⚔️'},
-{xp:300,nombre:'Capitán',icon:'👑'}
-];
-
-let actual=rangos[0];
-
-for(let r of rangos){
-if(datos.xp>=r.xp)actual=r;
-}
-
-const idx=rangos.indexOf(actual);
-const next=rangos[idx+1]?rangos[idx+1].xp:actual.xp+100;
-
-const actualXp=datos.xp-actual.xp;
-const total=next-actual.xp;
-const pct=Math.min(100,(actualXp/total)*100);
-
-document.getElementById('rango').textContent=actual.icon+' '+actual.nombre;
-document.getElementById('xp').textContent=actualXp;
-document.getElementById('xpNext').textContent=total;
-document.getElementById('xpFill').style.width=pct+'%';
-}
-
-/* ===================== CALENDARIO ===================== */
-
-function mostrarCalendarioCalor(){
-const div=document.getElementById('calendarioCalor');
-div.innerHTML='';
-
-const hoy=new Date();
-
-for(let i=89;i>=0;i--){
-const f=new Date(hoy);
-f.setDate(f.getDate()-i);
-
-const key=f.toDateString();
-const xp=xpHistorial[key]||0;
-
-let nivel=0;
-if(xp>=80)nivel=4;
-else if(xp>=60)nivel=3;
-else if(xp>=40)nivel=2;
-else if(xp>0)nivel=1;
-
-const box=document.createElement('div');
-box.className='cuadro-dia nivel-'+nivel;
-div.appendChild(box);
-}
-}
-
-/* ===================== HISTORIAL ===================== */
-
-function mostrarHistorial(){
-const div=document.getElementById('historial');
-div.innerHTML='';
-
-const hoy=new Date();
-
-for(let i=0;i<30;i++){
-const f=new Date(hoy);
-f.setDate(f.getDate()-i);
-
-const key=f.toDateString();
-const xp=xpHistorial[key]||0;
-
-if(xp>0){
-const pct=Math.round((xp/80)*100);
-
-div.innerHTML+=`
-<div class="dia-historial">
-<span>${f.toLocaleDateString('es-ES')}</span>
-<span class="pct">${pct}% - ${xp} XP</span>
-</div>`;
-}
-}
-}
-
-/* ===================== ESTADO ===================== */
-
-function cargarEstado(){
-const habitos=document.querySelectorAll('.habito');
-
-for(let i=0;i<datos.tareas.length;i++){
-if(datos.tareas[i]){
-document.getElementById('check'+i)?.classList.add('activo');
-habitos[i]?.classList.add('completado');
-}
-}
-
-crearVasos();
-
-const p=localStorage.getItem('peso_'+new Date().toDateString());
-if(p)document.getElementById('pesoInput').value=p;
-}
-
-/* ===================== METAS DEL AÑO ===================== */
-
-function agregarMeta(){
-const input=document.getElementById('metaInput');
-const texto=input.value.trim();
-if(!texto)return;
-
-metas.push({texto,hecha:false});
-input.value='';
-guardarMetas();
-mostrarMetas();
-}
-
-function mostrarMetas(){
-const div=document.getElementById('listaMetas');
-div.innerHTML='';
-
-metas.forEach((m,i)=>{
-div.innerHTML+=`
-<div class="habito ${m.hecha?'completado':''}">
-<span>${m.texto}</span>
-<input type="checkbox" ${m.hecha?'checked':''} onchange="toggleMeta(${i})">
-</div>`;
 });
+
 }
 
-function toggleMeta(i){
-metas[i].hecha=!metas[i].hecha;
+function toggleHabit(index){
+coins += 2;
+data.habits[index] =
+!data.habits[index];
 
-if(metas[i].hecha){
-datos.xp+=30;
+updateXP();
+
+save();
+
+renderHabits();
+
 }
 
-guardarMetas();
-guardarDatos();
-mostrarMetas();
-actualizarXP();
-sonidoDing();
+/* =====================================
+XP Y RANGOS
+===================================== */
+
+function updateXP(){
+
+const habitsXP =
+data.habits.filter(x=>x).length * 20;
+
+const todayXP =
+todayTasks.filter(x=>x.done).length * 10;
+
+const followXP =
+followups.filter(x=>x.done).length * 15;
+
+data.xp =
+habitsXP + todayXP + followXP;
+
+document.getElementById("xpDashboard")
+.innerText=data.xp;
+
+let rank="🪖 Recluta";
+
+if(data.xp>=100)
+rank="⚔️ Guerrero";
+
+if(data.xp>=250)
+rank="👑 Emperador";
+
+if(data.xp>=500)
+rank="🔥 Leyenda";
+
+document.getElementById("rank")
+.innerText=rank;
+
+save();
+
+}/* =====================================
+TAREAS DE HOY
+===================================== */
+
+function addTodayTask(){
+
+const input =
+document.getElementById("todayInput");
+
+if(!input.value.trim()) return;
+
+todayTasks.push({
+text:input.value,
+done:false
+});
+
+input.value="";
+
+save();
+
+renderTodayTasks();
+
+updateXP();
+
 }
 
-function guardarMetas(){
-localStorage.setItem('imperioMetas',JSON.stringify(metas));
+function toggleTodayTask(index){
+
+todayTasks[index].done =
+!todayTasks[index].done;
+
+save();
+
+renderTodayTasks();
+
+updateXP();
+
+}
+
+function renderTodayTasks(){
+
+const list =
+document.getElementById("todayList");
+
+if(!list) return;
+
+list.innerHTML="";
+
+todayTasks.forEach((task,index)=>{
+
+list.innerHTML += `
+<div onclick="toggleTodayTask(${index})">
+${task.done ? "✅" : "❌"}
+${task.text}
+</div>
+`;
+
+});
+
+document.getElementById("pendingTasks")
+.innerText=
+todayTasks.filter(x=>!x.done).length;
+
+}
+
+/* =====================================
+TAREAS DE MAÑANA
+===================================== */
+
+function addTomorrowTask(){
+
+const input =
+document.getElementById("tomorrowInput");
+
+if(!input.value.trim()) return;
+
+tomorrowTasks.push({
+text:input.value,
+done:false
+});
+
+input.value="";
+
+save();
+
+renderTomorrowTasks();
+
+}
+
+function toggleTomorrowTask(index){
+
+tomorrowTasks[index].done =
+!tomorrowTasks[index].done;
+
+save();
+
+renderTomorrowTasks();
+
+}
+
+function renderTomorrowTasks(){
+
+const list =
+document.getElementById("tomorrowList");
+
+if(!list) return;
+
+list.innerHTML="";
+
+tomorrowTasks.forEach((task,index)=>{
+
+list.innerHTML += `
+<div onclick="toggleTomorrowTask(${index})">
+${task.done ? "✅" : "❌"}
+${task.text}
+</div>
+`;
+
+});
+
+}
+
+/* =====================================
+RECORDATORIOS
+===================================== */
+
+function addReminder(){
+
+const input =
+document.getElementById("reminderInput");
+
+if(!input.value.trim()) return;
+
+reminders.push({
+text:input.value
+});
+
+input.value="";
+
+save();
+
+renderReminders();
+
+}
+
+function renderReminders(){
+
+const list =
+document.getElementById("reminderList");
+
+if(!list) return;
+
+list.innerHTML="";
+
+reminders.forEach((item)=>{
+
+list.innerHTML += `
+<div>
+⏰ ${item.text}
+</div>
+`;
+
+});
+
+}
+
+/* =====================================
+SEGUIMIENTOS
+===================================== */
+
+function addFollowup(){
+
+const text =
+document.getElementById("followInput").value;
+
+const priority =
+document.getElementById("priority").value;
+
+if(!text.trim()) return;
+
+followups.push({
+text,
+priority,
+done:false
+});
+
+document.getElementById("followInput").value="";
+
+save();
+
+renderFollowups();
+
+}
+
+function toggleFollowup(index){
+
+followups[index].done =
+!followups[index].done;
+
+save();
+
+renderFollowups();
+
+updateXP();
+
+}
+
+function renderFollowups(){
+
+const list =
+document.getElementById("followupList");
+
+if(!list) return;
+
+list.innerHTML="";
+
+followups.forEach((item,index)=>{
+
+list.innerHTML += `
+<div onclick="toggleFollowup(${index})">
+${item.done ? "✅" : "📌"}
+${item.text}
+(${item.priority})
+</div>
+`;
+
+});
+
+document.getElementById("pendingFollowups")
+.innerText=
+followups.filter(x=>!x.done).length;
+
+}
+
+/* =====================================
+BARBERIA
+===================================== */
+
+function addClient(){
+
+const name =
+document.getElementById("clientName").value;
+
+const phone =
+document.getElementById("clientPhone").value;
+
+const date =
+document.getElementById("clientDate").value;
+
+if(!name.trim()) return;
+
+clients.push({
+name:name,
+phone:phone,
+date:date
+});
+
+document.getElementById("clientName").value="";
+document.getElementById("clientPhone").value="";
+document.getElementById("clientDate").value="";
+
+save();
+
+renderClients();
+
+renderContactToday();
+
+
+}
+
+function renderClients(){
+
+const list =
+document.getElementById("clientList");
+
+if(!list) return;
+
+list.innerHTML="";
+
+clients.forEach(client=>{
+
+list.innerHTML += `
+<div>
+💈 ${client.name}<br>
+📞 ${client.phone}
+</div>
+`;
+
+});
+
+}
+
+/* =====================================
+IA IMPERIO
+===================================== */
+
+function askAI(){
+
+const q =
+document.getElementById("iaInput")
+.value.toLowerCase();
+
+let response =
+"👑 Mantente enfocado.";
+
+if(q.includes("dinero"))
+response =
+"💰 Prioriza ingresos y controla gastos.";
+
+if(q.includes("barberia"))
+response =
+"💈 Da seguimiento a tus mejores clientes.";
+
+if(q.includes("disciplina"))
+response =
+"⚔️ Cumple hábitos aunque no tengas ganas.";
+
+if(q.includes("motivacion"))
+response =
+"🔥 La acción crea motivación.";
+
+document.getElementById("iaResponse")
+.innerText=response;
+
+}
+
+/* =====================================
+CAMBIAR PIN
+===================================== */
+
+function changePin(){
+
+const newPin =
+document.getElementById("newPin").value;
+
+if(newPin.length < 4){
+
+alert("PIN mínimo 4 dígitos");
+
+return;
+
+}
+
+data.pin = newPin;
+
+save();
+
+alert("PIN actualizado");
+
+document.getElementById("newPin").value="";
+
+}
+
+/* =====================================
+RECORDATORIO PERSONAL
+===================================== */
+
+function savePersonalNote(){
+
+const note =
+document.getElementById("personalNote")
+.value;
+
+localStorage.setItem(
+"personalNote",
+note
+);
+
+alert("Recordatorio guardado");
+
+}
+
+function loadPersonalNote(){
+
+const note =
+localStorage.getItem("personalNote");
+
+if(note){
+
+document.getElementById("personalNote")
+.value=note;
+
+}
+
+}/* ==========================
+MISIÓN PRINCIPAL
+========================== */
+
+let mainMission =
+localStorage.getItem("mainMission") || "";
+
+let missionDone =
+localStorage.getItem("missionDone") === "true";
+
+function saveMainMission(){
+
+mainMission =
+document.getElementById("mainMissionInput").value;
+
+localStorage.setItem(
+"mainMission",
+mainMission
+);
+
+missionDone = false;
+
+localStorage.setItem(
+"missionDone",
+"false"
+);
+
+renderMission();
+
+}
+
+function completeMission(){
+
+if(missionDone) return;
+
+missionDone = true;
+coins += 20;
+data.xp += 100;
+
+save();
+
+localStorage.setItem(
+"missionDone",
+"true"
+);
+
+renderMission();
+
+updateXP();
+
+alert("🔥 +100 XP por completar tu misión");
+
+}checkAchievements();
+
+renderCoins();
+renderAchievements();
+renderStats();
+renderMentor();
+
+function renderMission(){
+
+const div =
+document.getElementById("mainMissionView");
+
+if(!div) return;
+
+div.innerHTML = missionDone
+? `✅ ${mainMission}`
+: `🎯 ${mainMission}`;
+
+}
+
+/* ==========================
+META DE DINERO
+========================== */
+
+function saveMoneyGoal(){
+
+const goal =
+Number(
+document.getElementById("goalMoney").value
+);
+
+const today =
+Number(
+document.getElementById("todayMoney").value
+);
+
+localStorage.setItem(
+"goalMoney",
+goal
+);
+
+localStorage.setItem(
+"todayMoney",
+today
+);
+
+renderMoney();
+
+}
+
+function renderMoney(){
+
+const goal =
+Number(localStorage.getItem("goalMoney")) || 0;
+
+const today =
+Number(localStorage.getItem("todayMoney")) || 0;
+
+const pct =
+goal > 0
+? Math.min(100,Math.round((today/goal)*100))
+: 0;
+
+const div =
+document.getElementById("moneyProgress");
+
+if(!div) return;
+
+div.innerHTML = `
+<p>Meta: RD$ ${goal}</p>
+<p>Hoy: RD$ ${today}</p>
+<p>${pct}% completado</p>
+`;
+
+}
+/* ==========================
+COMMAND CENTER
+========================== */
+
+function renderCommandCenter(){
+
+const habitosCompletados =
+data.habits.filter(x=>x).length;
+
+const seguimientosPendientes =
+followups.filter(x=>!x.done).length;
+
+const clientesPendientes =
+clients.length;
+
+const dineroHoy =
+Number(localStorage.getItem("todayMoney")) || 0;
+
+const metaHoy =
+Number(localStorage.getItem("goalMoney")) || 2000;
+
+let rango = "🪖 Recluta";
+
+if(data.xp >= 100) rango="⚔️ Guerrero";
+if(data.xp >= 250) rango="👑 Emperador";
+if(data.xp >= 500) rango="🔥 Leyenda";
+
+document.getElementById("ccNivel").innerHTML=
+`<b>${rango}</b>`;
+
+document.getElementById("ccXP").innerHTML=
+`⚔️ XP: ${data.xp}`;
+
+document.getElementById("ccHabitos").innerHTML=
+`🔥 Hábitos: ${habitosCompletados}/14`;
+
+document.getElementById("ccSeguimientos").innerHTML=
+`📞 Seguimientos: ${seguimientosPendientes}`;
+
+document.getElementById("ccClientes").innerHTML=
+`💈 Clientes: ${clientesPendientes}`;
+
+document.getElementById("ccMeta").innerHTML=
+`💰 RD$ ${dineroHoy} / ${metaHoy}`;
+
+let prioridad =
+seguimientosPendientes > 0
+? "📞 Hacer seguimientos"
+: "🎯 Completar misión";
+
+document.getElementById("ccPrioridad").innerHTML=
+`🚨 Prioridad: ${prioridad}`;
+}
+function renderContactToday(){
+
+const div =
+document.getElementById("contactToday");
+
+if(!div) return;
+
+div.innerHTML="";
+
+const hoy = new Date();
+
+clients.forEach(cliente=>{
+
+if(!cliente.date) return;
+
+const ultimaFecha =
+new Date(cliente.date);
+
+const dias =
+Math.floor(
+(hoy - ultimaFecha) /
+(1000*60*60*24)
+);
+
+if(dias >= 7){
+
+div.innerHTML += `
+<div class="habito">
+💈 ${cliente.name}
+<br>
+⚠️ ${dias} días sin corte
+</div>
+`;
+
+}
+
+});
+
+}/* ==========================
+COINS
+========================== */
+
+function renderCoins(){
+
+const div =
+document.getElementById("coins");
+
+if(!div) return;
+
+div.innerText = coins;
+
+localStorage.setItem("coins",coins);
+
+}
+
+/* ==========================
+LOGROS
+========================== */
+
+function unlockAchievement(name){
+
+if(achievements.includes(name))
+return;
+
+achievements.push(name);
+
+coins += 50;
+
+localStorage.setItem(
+"achievements",
+JSON.stringify(achievements)
+);
+
+}
+
+function checkAchievements(){
+
+if(data.xp >= 100)
+unlockAchievement("⚔️ Primer Guerrero");
+
+if(data.xp >= 500)
+unlockAchievement("👑 Emperador");
+
+if(clients.length >= 25)
+unlockAchievement("💈 25 Clientes");
+
+if(followups.length >= 50)
+unlockAchievement("📞 Maestro Seguimiento");
+
+}
+
+function renderAchievements(){
+
+const div =
+document.getElementById(
+"achievementList"
+);
+
+if(!div) return;
+
+div.innerHTML="";
+
+achievements.forEach(a=>{
+
+div.innerHTML += `
+<div class="habito completado">
+${a}
+</div>
+`;
+
+});
+
+}
+
+/* ==========================
+ESTADISTICAS
+========================== */
+
+function renderStats(){
+
+const div =
+document.getElementById("stats");
+
+if(!div) return;
+
+const habitsDone =
+data.habits.filter(x=>x).length;
+
+div.innerHTML=`
+
+🔥 Hábitos:
+${habitsDone}<br><br>
+
+💈 Clientes:
+${clients.length}<br><br>
+
+📞 Seguimientos:
+${followups.length}<br><br>
+
+⚔️ XP:
+${data.xp}<br><br>
+
+💎 Coins:
+${coins}
+
+`;
+
+}
+
+/* ==========================
+MENTOR IA
+========================== */
+
+function renderMentor(){
+
+const div =
+document.getElementById(
+"mentorMessage"
+);
+
+if(!div) return;
+
+const pendientes =
+followups.filter(
+x=>!x.done
+).length;
+
+let msg = "";
+
+if(pendientes > 0){
+
+msg =
+`👑 Tienes ${pendientes}
+seguimientos pendientes.
+Hazlos primero.`;
+
+}
+else{
+
+msg =
+`🔥 Excelente.
+No tienes seguimientos
+pendientes.`;
+
+}
+
+if(data.habits.filter(x=>x).length < 5){
+
+msg +=
+`<br><br>⚠️ Te faltan hábitos.`;
+
+}
+
+div.innerHTML = msg;
+
 }
